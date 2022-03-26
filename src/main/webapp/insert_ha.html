@@ -1,0 +1,63 @@
+<html>
+<head>
+<style>
+header {
+    background-color:black;
+    color:white;
+    text-align:center;
+    padding:5px;	 
+}
+nav {
+    line-height:30px;
+    background-color:#eeeeee;
+    height:300px;
+    width:100px;
+    float:left;
+    padding:5px;	      
+}
+section {
+    width:350px;
+    float:left;
+    padding:10px;	 	 
+}
+footer {
+    background-color:black;
+    color:white;
+    clear:both;
+    text-align:center;
+    padding:5px;	 	 
+}
+</style>
+</head>
+
+<body>
+<header>
+<h1> Insert Data </h1>
+</header>
+
+<nav>
+<a href="./search_ha.html">Search Data</a> <br>
+</nav>
+
+<section>
+	<h1>User Input</h1>
+	
+	<form action="InsertHa" method="POST">
+	
+		Make: <input type="text" name="Makes"> <br />
+		Model: <input type="text" name="Models"> <br />
+		VIN: <input type="text" name="VIN"> <br />
+		Year: <input type="text" name="Year"> <br />
+		Price: <input type="text" name="Price"> <br />
+		Phone: <input type="text" name="Phone"> <br />
+		Email: <input type="text" name="Email"> <br />
+		<input type="submit" value="Submit" />
+	</form>
+
+</section>
+
+<footer>
+Copyright
+</footer>
+</body>
+</html>

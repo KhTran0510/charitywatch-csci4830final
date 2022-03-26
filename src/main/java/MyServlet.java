@@ -1,5 +1,3 @@
-
-
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,8 +25,18 @@ public class MyServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		response.getWriter().append("Hello World");
+        response.setContentType("text/html");
+        response.getWriter().println("<html>");
+        response.getWriter().println("<head>");
+        response.getWriter().println("<title>Hello World!</title>");
+        response.getWriter().println("</head>");
+        response.getWriter().println("<body>");
+        response.getWriter().println("<h1>Hello World!</h1>");
+        response.getWriter().println("<h2>Welcome to the Car Dealer</h2>");
+        response.getWriter().println("</body>");
+        response.getWriter().println("</html>");
+        response.getWriter().println("<a href=./search_ha.html>Search Data</a> <br>");
+        response.getWriter().println("</body></html>");
 	}
 
 	/**
