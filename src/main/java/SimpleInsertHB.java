@@ -27,6 +27,9 @@ public class SimpleInsertHB extends HttpServlet implements Info {
       String phone = request.getParameter("phone").trim();
       String email = request.getParameter("email").trim();
       UtilDBHa.createCars(make, model, vin, year, price, phone, email);
+      
+      //run mysql here to insert sysdate *****
+      
 
       response.setContentType("text/html");
       PrintWriter out = response.getWriter();
