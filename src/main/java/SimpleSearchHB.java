@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import datamodel.CarHa;
 import util.Info;
-import util.UtilDBHa;
+import util.UtilDB;
 
 @WebServlet("/SimpleSearchHB")
 public class SimpleSearchHB extends HttpServlet implements Info {
@@ -36,9 +36,9 @@ public class SimpleSearchHB extends HttpServlet implements Info {
 
       List<CarHa> listEmployees = null;
       if (keyword != null && !keyword.isEmpty()) {
-         listEmployees = UtilDBHa.listEmployees(keyword);
+         listEmployees = UtilDB.listEmployees(keyword);
       } else {
-         listEmployees = UtilDBHa.listEmployees();
+         listEmployees = UtilDB.listEmployees();
       }
       display(listEmployees, out);
       out.println("</ul>");
@@ -48,23 +48,19 @@ public class SimpleSearchHB extends HttpServlet implements Info {
 
    void display(List<CarHa> listEmployees, PrintWriter out) {
       for (CarHa employee : listEmployees) {
-         System.out.println("[DBG] " + employee.getId() + ", " //
-               + employee.getMake() + ", " //
-               + employee.getModel() + ", " //
-               + employee.getVin() + ", " //
-               + employee.getYear() + ", " //
-               + employee.getPrice() + ", " //
-               + employee.getPhone() + ", " //
-               + employee.getEmail());
+         System.out.println("[DBG] " //
+               + employee.getFirst() + ", " //
+               + employee.getLast() + ", " //
+               + employee.getEmail() + ", " //
+               + employee.getAddress() + ", " //
+               + employee.getPassword());
 
-         out.println("<li>" + employee.getId() + ", " //
-               + employee.getMake() + ", " //
-               + employee.getModel() + ", " //
-               + employee.getVin() + ", " //
-               + employee.getYear() + ", " //
-               + employee.getPrice() + ", " //
-               + employee.getPhone() + ", " //
-               + employee.getEmail() + "</li>");
+         out.println("<li>"
+                 + employee.getFirst() + ", " //
+                 + employee.getLast() + ", " //
+                 + employee.getEmail() + ", " //
+                 + employee.getAddress() + ", " //
+                 + employee.getPassword()+ "</li>");
       }
    }
 

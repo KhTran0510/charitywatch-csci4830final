@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import util.Info;
-import util.UtilDBHa;
+import util.UtilDB;
 
 @WebServlet("/SimpleInsertHB")
 public class SimpleInsertHB extends HttpServlet implements Info {
@@ -19,14 +19,12 @@ public class SimpleInsertHB extends HttpServlet implements Info {
    }
 
    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      String make = request.getParameter("make").trim();
-      String model = request.getParameter("model").trim();
-      String vin = request.getParameter("vin").trim();
-      String year = request.getParameter("year").trim();
-      String price = request.getParameter("price").trim();
-      String phone = request.getParameter("phone").trim();
+      String first = request.getParameter("first").trim();
+      String last = request.getParameter("last").trim();
       String email = request.getParameter("email").trim();
-      UtilDBHa.createCars(make, model, vin, year, price, phone, email);
+      String address = request.getParameter("address").trim();
+      String password = request.getParameter("password").trim();
+      UtilDB.createCars(first, last, email, address, password);
       
       //run mysql here to insert sysdate *****
       
@@ -41,13 +39,11 @@ public class SimpleInsertHB extends HttpServlet implements Info {
             "<body bgcolor=\"#f0f0f0\">\n" + //
             "<h1 align=\"center\">" + title + "</h1>\n");
       out.println("<ul>");
-      out.println("<li> Make: " + make);
-      out.println("<li> Model: " + model);
-      out.println("<li> VIN: " + vin);
-      out.println("<li> Year: " + year);
-      out.println("<li> Price: " + price);
-      out.println("<li> Phone: " + phone);
+      out.println("<li> First: " + first);
+      out.println("<li> Last: " + last);
       out.println("<li> Email: " + email);
+      out.println("<li> Address: " + address);
+
       out.println("</ul>");
       out.println("<a href=/" + projectName + "/" + searchWebName + ">Search Car</a> <br>");
       out.println("</body></html>");

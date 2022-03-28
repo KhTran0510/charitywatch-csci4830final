@@ -13,37 +13,35 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/InsertHa")
-public class InsertHa extends HttpServlet {
+@WebServlet("/SignUp")
+public class SignUp extends HttpServlet {
    private static final long serialVersionUID = 1L;
 
-   public InsertHa() {
+   public SignUp() {
       super();
    }
 
    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      String make = request.getParameter("Makes");
-      String model = request.getParameter("Models");
-      String vin = request.getParameter("VIN");
-      String year = request.getParameter("Year");
-      String price = request.getParameter("Price");
-      String phone = request.getParameter("Phone");
-      String email = request.getParameter("Email");
+      String first = request.getParameter("first");
+      String last = request.getParameter("last");
+      String email = request.getParameter("email");
+      String address = request.getParameter("address");
+      String password = request.getParameter("password");
 
       Connection connection = null;
-      String insertSql = " INSERT INTO Cars (id, Makes, Models, VIN, Year, Price, Phone, Email) values (default, ?, ?, ?, ?, ?, ?, ?)";
+      //String insertSql_foundation =
+      String insertSql = " INSERT INTO foundation (first, last, email, address, password) values (?, ?, ?, ?, ?)";
+      //String insertSql_donor = " INSERT INTO donor (id, Makes, Models, VIN, Year, Price, Phone, Email) values (default, ?, ?, ?, ?, ?, ?, ?)";
 
       try {
-         DBConnectionHa.getDBConnection(getServletContext());
-         connection = DBConnectionHa.connection;
+         DBConnection.getDBConnection(getServletContext());
+         connection = DBConnection.connection;
          PreparedStatement preparedStmt = connection.prepareStatement(insertSql);
-         preparedStmt.setString(1, make);
-         preparedStmt.setString(2, model);
-         preparedStmt.setString(3, vin);
-         preparedStmt.setString(4, year);
-         preparedStmt.setString(5, price);
-         preparedStmt.setString(6, phone);
-         preparedStmt.setString(7, email);
+         preparedStmt.setString(1, first);
+         preparedStmt.setString(2, last);
+         preparedStmt.setString(3, email);
+         preparedStmt.setString(4, address);
+         preparedStmt.setString(5, password);
          preparedStmt.execute();
          connection.close();
       } catch (Exception e) {
@@ -53,7 +51,7 @@ public class InsertHa extends HttpServlet {
       // Set response content type
       response.setContentType("text/html");
       PrintWriter out = response.getWriter();
-      String title = "Insert Data to DB table";
+      String title = "Sign Up members";
       String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + "transitional//en\">\n";
       out.println(docType + //
             "<html>\n" + //
@@ -62,19 +60,16 @@ public class InsertHa extends HttpServlet {
             "<h2 align=\"center\">" + title + "</h2>\n" + //
             "<ul>\n" + //
 
-            "  <li><b>Make</b>: " + make + "\n" + //
-            "  <li><b>Model</b>: " + model + "\n" + //
-            "  <li><b>VIN</b>: " + vin + "\n" + //
-            "  <li><b>Year</b>: " + year + "\n" + //
-            "  <li><b>Price</b>: " + price + "\n" + //
-            "  <li><b>Phone</b>: " + phone + "\n" + //
+            "  <li><b>First</b>: " + first + "\n" + //
+            "  <li><b>Last</b>: " + last + "\n" + //
             "  <li><b>Email</b>: " + email + "\n" + //
-
+            "  <li><b>Address</b>: " + address + "\n" + //
+            "  <li><b>Pass</b>: " + password + "\n" + //
             "</ul>\n");
 
-      out.println("<a href=./search_ha.html>Search Data</a> <br>");
+      out.println("<a href=./search_data.html>Search Data</a> <br>");
       out.println("</body></html>");
-      out.println("<a href=./insert_ha.html>Insert Data</a> <br>");
+      out.println("<a href=./sign_up.html>Sign Up</a> <br>");
       out.println("</body></html>");
    }
 

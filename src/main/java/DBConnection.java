@@ -3,7 +3,7 @@ import java.sql.DriverManager;
 
 import javax.servlet.ServletContext;
 
-public class DBConnectionHa {
+public class DBConnection {
    static Connection connection = null;
    static ServletContext servletContext;
 
@@ -20,7 +20,7 @@ public class DBConnectionHa {
 
       connection = null;
       try {
-         UtilPropHa.loadProperty(servletContext);
+         UtilProp.loadProperty(servletContext);
          connection = DriverManager.getConnection(getURL(), getUserName(), getPassword());
       } catch (Exception e) {
          System.out.println("Connection Failed! Check output console");
@@ -36,19 +36,19 @@ public class DBConnectionHa {
    }
 
    static String getURL() {
-      String url = UtilPropHa.getProp("url");
+      String url = UtilProp.getProp("url");
       System.out.println("[DBG] URL: " + url);
       return url;
    }
 
    static String getUserName() {
-      String usr = UtilPropHa.getProp("user");
+      String usr = UtilProp.getProp("user");
       System.out.println("[DBG] URL: " + usr);
       return usr;
    }
 
    static String getPassword() {
-      String pwd = UtilPropHa.getProp("password");
+      String pwd = UtilProp.getProp("password");
       System.out.println("[DBG] URL: " + pwd);
       return pwd;
    }

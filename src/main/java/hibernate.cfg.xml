@@ -6,7 +6,7 @@
 	<session-factory>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="hibernate.connection.url">jdbc:mysql://dha.ddns.net:3306/myDBTech?useSSL=false</property>
+		<property name="hibernate.connection.url">jdbc:mysql://khoatranuno.ddns.net:3306/charityWatch?useSSL=false</property>
 		<property name="hibernate.connection.username">newmysqlremoteuser</property>
 		<property name="hibernate.connection.password">mypassword</property>
 		<property name="hibernate.hbm2ddl.auto">update</property>

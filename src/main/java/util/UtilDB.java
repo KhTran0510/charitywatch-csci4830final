@@ -19,7 +19,7 @@ import org.hibernate.Transaction;
 /**
  * @since JavaSE-1.8
  */
-public class UtilDBHa {
+public class UtilDB {
    static SessionFactory sessionFactory = null;
 
    public static SessionFactory getSessionFactory() {
@@ -67,7 +67,7 @@ public class UtilDBHa {
          List<?> employees = session.createQuery("FROM CarHa").list();
          for (Iterator<?> iterator = employees.iterator(); iterator.hasNext();) {
             CarHa employee = (CarHa) iterator.next();
-            if (employee.getMake().startsWith(keyword)) {
+            if (employee.getFirst().startsWith(keyword)) {
                resultList.add(employee);
             }
          }
@@ -82,12 +82,12 @@ public class UtilDBHa {
       return resultList;
    }
 
-   public static void createCars(String make, String model, String vin, String year, String price, String phone, String email) {
+   public static void createCars(String first, String last, String email, String address, String password) {
       Session session = getSessionFactory().openSession();
       Transaction tx = null;
       try {
          tx = session.beginTransaction();
-         session.save(new CarHa(make, model, vin, year, price, phone, email));
+         session.save(new CarHa(first, last, email, address, password));
          tx.commit();
       } catch (HibernateException e) {
          if (tx != null)

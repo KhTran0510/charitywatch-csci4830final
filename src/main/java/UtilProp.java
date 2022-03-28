@@ -3,7 +3,7 @@ import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.InputStream;
 
-public class UtilPropHa {
+public class UtilProp {
 
    static Properties prop = new Properties();
 

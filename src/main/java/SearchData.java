@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/SearchHa")
-public class SearchHa extends HttpServlet {
+@WebServlet("/SearchData")
+public class SearchData extends HttpServlet {
    private static final long serialVersionUID = 1L;
 
-   public SearchHa() {
+   public SearchData() {
       super();
    }
 
@@ -45,8 +45,8 @@ public class SearchHa extends HttpServlet {
       Connection connection = null;
       PreparedStatement preparedStatement = null;
       try {
-         DBConnectionHa.getDBConnection(getServletContext());
-         connection = DBConnectionHa.connection;
+         DBConnection.getDBConnection(getServletContext());
+         connection = DBConnection.connection;
 
          if (keywordmake.isEmpty() &&keywordmodel.isEmpty() && keywordvin.isEmpty() &&keywordyear.isEmpty() &&keywordprice.isEmpty() &&keywordphone.isEmpty() &&keywordemail.isEmpty()) {
             String selectSQL = "SELECT * FROM Cars";
@@ -93,9 +93,9 @@ public class SearchHa extends HttpServlet {
                out.println("Email: " + email + "<br>");
             }
          }
-         out.println("<a href=./search_ha.html>Search Data</a> <br>");
+         out.println("<a href=./search_data.html>Search Data</a> <br>");
          out.println("</body></html>");
-         out.println("<a href=./insert_ha.html>Insert Data</a> <br>");
+         out.println("<a href=./sign_up.html>Sign Up</a> <br>");
          out.println("</body></html>");
          rs.close();
          preparedStatement.close();
