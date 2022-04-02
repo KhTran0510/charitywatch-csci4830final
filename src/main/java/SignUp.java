@@ -34,10 +34,14 @@ public class SignUp extends HttpServlet {
       String email = request.getParameter("email");
       String address = request.getParameter("address");
       String password = request.getParameter("password");
-
+      
+      String typeinput = request.getParameter("submit");
+      
+      if ("submit_foundation".equals(typeinput)) {
       Connection connection = null;
       //String insertSql_foundation =
-      String insertSql = " INSERT INTO foundation (first, last, email, address, password) values (?, ?, ?, ?, ?)";
+       
+      String insertSql = " INSERT INTO foundation (fullname, found_name, email, address, password) values (?, ?, ?, ?, ?)";
       //String insertSql_donor = " INSERT INTO donor (id, Makes, Models, VIN, Year, Price, Phone, Email) values (default, ?, ?, ?, ?, ?, ?, ?)";
 
       try {
@@ -54,15 +58,38 @@ public class SignUp extends HttpServlet {
       } catch (Exception e) {
          e.printStackTrace();
       }
+      }
       
+      else {
+    	  Connection connection = null;
+          //String insertSql_foundation =
+           
+          //String insertSql = " INSERT INTO foundation (first, last, email, address, password) values (?, ?, ?, ?, ?)";
+          String insertSql = " INSERT INTO donors (first, last, email, address, password) values (?, ?, ?, ?, ?)";
+
+          try {
+             DBConnection.getDBConnection(getServletContext());
+             connection = DBConnection.connection;
+             PreparedStatement preparedStmt = connection.prepareStatement(insertSql);
+             preparedStmt.setString(1, first);
+             preparedStmt.setString(2, last);
+             preparedStmt.setString(3, email);
+             preparedStmt.setString(4, address);
+             preparedStmt.setString(5, password);
+             preparedStmt.execute();
+             connection.close();
+          } catch (Exception e) {
+             e.printStackTrace();
+      }
       
-      request.setAttribute("first", first);
-      request.setAttribute("last", last);
+      //request.setAttribute("first", first);
+      //request.setAttribute("last", last);
       
-      request.getRequestDispatcher("/WEB-INF/test.jsp").forward(request, response);
+      //request.getRequestDispatcher("/WEB-INF/test.jsp").forward(request, response);
+      }
    
       
-      /*
+      
       response.setContentType("text/html");
       PrintWriter out = response.getWriter();
       String title = "Sign Up members";
@@ -73,13 +100,7 @@ public class SignUp extends HttpServlet {
             "<body bgcolor=\"#f0f0f0\">\n" + //
             "<h2 align=\"center\">" + title + "</h2>\n" + //
             "<ul>\n" + //
-            
-			"  <form action=\"\" method=\"POST\"> " + "\n" + //
-			"<input type=\"radio\" id=\"donor\" name=\"acctype\" value=\"Donor\" checked>\r\n"
-			+ "		<label for=\"donor\">Donor</label><br>\r\n"
-			+ "		<input type=\"radio\" id=\"foundation\" name=\"acctype\" value=\"Foundation\">\r\n"
-			+ " 		<label for=\"foundation\">Foundation</label><br> "+
-			
+          		
 
             "  <li><b>First</b>: " + first + "\n" + //
             "  <li><b>Last</b>: " + last + "\n" + //
@@ -88,9 +109,8 @@ public class SignUp extends HttpServlet {
             "  <li><b>Pass</b>: " + password + "\n" + //
             "</ul>\n");
 
-      out.println("<a href=./search_data.html>Search Data</a> <br>");
-      out.println("<input type=\"submit\" value=\"Submit\" /></form>");
-      out.println("</body></html>");*/
+      out.println("<a href=./login.html>Login Page</a> <br>");
+      out.println("</body></html>");
       
       
       
