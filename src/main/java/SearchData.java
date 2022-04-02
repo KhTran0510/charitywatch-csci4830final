@@ -20,17 +20,11 @@ public class SearchData extends HttpServlet {
    }
 
    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	  String keywordmake = request.getParameter("keywordmake");
-	  String keywordmodel = request.getParameter("keywordmodel");
-      String keywordvin = request.getParameter("keywordvin");
-      String keywordyear = request.getParameter("keywordyear");
-      String keywordprice = request.getParameter("keywordprice");
-      String keywordphone = request.getParameter("keywordphone");
-      String keywordemail = request.getParameter("keywordemail");
-      search(keywordmake, keywordmodel, keywordvin, keywordyear, keywordprice, keywordphone, keywordemail, response);
+	  String keywordfound_name = request.getParameter("keywordfound_name");
+      search(keywordfound_name, response);
    }//
 
-   void search(String keywordmake, String keywordmodel, String keywordvin, String keywordyear, String keywordprice, String keywordphone, String keywordemail, HttpServletResponse response) throws IOException {
+   void search(String keywordfound_name, HttpServletResponse response) throws IOException {
       response.setContentType("text/html");
       PrintWriter out = response.getWriter();
       String title = "Database Result";
@@ -48,53 +42,40 @@ public class SearchData extends HttpServlet {
          DBConnection.getDBConnection(getServletContext());
          connection = DBConnection.connection;
 
-         if (keywordmake.isEmpty() &&keywordmodel.isEmpty() && keywordvin.isEmpty() &&keywordyear.isEmpty() &&keywordprice.isEmpty() &&keywordphone.isEmpty() &&keywordemail.isEmpty()) {
-            String selectSQL = "SELECT * FROM Cars";
+         if (keywordfound_name.isEmpty()) {
+            String selectSQL = "SELECT * FROM foundation";
             preparedStatement = connection.prepareStatement(selectSQL);
          }
          else {
-        	 String selectSQL = "SELECT * FROM Cars WHERE Makes LIKE ? AND Models LIKE ? AND VIN LIKE ? AND Year LIKE ? AND Price LIKE ? AND Phone LIKE ? AND Email LIKE ?";
-        	 String make = keywordmake + "%";
-             String model = keywordmodel + "%";
-             String vin = keywordvin + "%";
-             String year = keywordyear + "%";
-             String price = keywordprice + "%";
-             String phone = keywordphone + "%";
-             String email = keywordemail + "%";
+        	 String selectSQL = "SELECT * FROM foundation WHERE found_name LIKE ?";
+        	 String found_name =  "%" + keywordfound_name + "%";
              preparedStatement = connection.prepareStatement(selectSQL);
-             preparedStatement.setString(1, make);
-             preparedStatement.setString(2, model);
-             preparedStatement.setString(3, vin);
-             preparedStatement.setString(4, year);
-             preparedStatement.setString(5, price);
-             preparedStatement.setString(6, phone);
-             preparedStatement.setString(7, email);
+             preparedStatement.setString(1, found_name);
          }
          ResultSet rs = preparedStatement.executeQuery();
-
+         
+         
+         out.println("<form action=\"SearchData\" method=\"POST\">");
+         out.println("Search:  <input type=\"text\" name=\"keywordfound_name\">");
+         out.println("<input type=\"submit\" value=\"Search\" /></form><br/>");
+         
          while (rs.next()) {
-            int id = rs.getInt("id");
-            String make = rs.getString("Makes").trim();
-            String model = rs.getString("Models").trim();
-            String vin = rs.getString("VIN").trim();
-            String year = rs.getString("Year").trim();
-            String price = rs.getString("Price").trim();
-            String phone = rs.getString("Phone").trim();
-            String email = rs.getString("Email").trim();
+            //int id = rs.getInt("id");
+            String found_name = rs.getString("found_name").trim();
+            
 
-            if (keywordmake.isEmpty() || make.contains(keywordmake)) {
+            if (keywordfound_name.isEmpty() || found_name.contains(keywordfound_name)) {
                //out.println("ID: " + id + ", ");
-               out.println("Make: " + make + ", ");
-               out.println("Model: " + model + ", ");
-               out.println("VIN: " + vin + ", ");
-               out.println("Year: " + year + ", ");
-               out.println("Price: " + price + ", ");
-               out.println("Phone: " + phone + ", ");
-               out.println("Email: " + email + "<br>");
+            	out.println("<input type=\"radio\" id=\""+found_name+"\" name=\"acctype\" value=\""+found_name+"\" checked>");
+            	out.println("Foundation: " + found_name + "<br>");
+               
             }
          }
+         
+         out.println("<input type=\"submit\" value=\"Donate\" /><br/>");
          out.println("<a href=./search_data.html>Search Data</a> <br>");
          out.println("</body></html>");
+         
          out.println("<a href=./sign_up.html>Sign Up</a> <br>");
          out.println("</body></html>");
          rs.close();
