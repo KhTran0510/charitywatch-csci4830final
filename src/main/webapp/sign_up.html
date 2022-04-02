@@ -27,6 +27,13 @@ footer {
     text-align:center;
     padding:5px;	 	 
 }
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
 </style>
 </head>
 
@@ -40,22 +47,50 @@ footer {
 </nav>
 
 <section>
-	<h1>User Input</h1>
+	<h1>Select account type</h1>
 	
-	<form action="SignUp" method="POST">
-		<p>Please select your account type:</p>
- 		<input type="radio" id="donor" name="acctype" value="Donor" checked>
-		<label for="donor">Donor</label><br>
-		<input type="radio" id="foundation" name="acctype" value="Foundation">
- 		<label for="foundation">Foundation</label><br>
-	
+	<p>Donor signup:</p>
+	<button type="button" class="collapsible" >Click me!</button>
+	<div class="content">
+  		<form action="SignUp" method="POST">
 		First name: <input type="text" name="first"> <br />
 		Last name: <input type="text" name="last"> <br />
 		Email: <input type="text" name="email"> <br />
 		Password: <input type="password" name="password"> <br />
 		Address: <input type="text" name="address"> <br />
-		<input type="submit" value="Submit" />
-	</form>
+		<input type="submit" value="submit_donor" />
+		</form>
+	</div>
+	
+	<p>Foundation signup:</p>
+	<button type="button" class="collapsible">Click me!</button>
+	<div class="content">	
+		<form action="SignUp" method="POST">
+			Full name: <input type="text" name="first"> <br />
+			Foundation name: <input type="text" name="last"> <br />
+			Email: <input type="text" name="email"> <br />
+			Password: <input type="password" name="password"> <br />
+			Address: <input type="text" name="address"> <br />
+			<input type="submit" value="submit_foundation" />
+		</form>
+	</div>
+	
+	<script>
+		var coll = document.getElementsByClassName("collapsible");
+		var i;
+	
+		for (i = 0; i < coll.length; i++) {
+	  		coll[i].addEventListener("click", function() {
+	    	this.classList.toggle("active");
+	    	var content = this.nextElementSibling;
+	    	if (content.style.display === "block") {
+	      		content.style.display = "none";
+	    	} else {
+	      		content.style.display = "block";
+	    	}
+	    });
+	}
+	</script>
 
 </section>
 
