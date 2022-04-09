@@ -78,7 +78,7 @@ public class SignUp extends HttpServlet {
         	  out.println("window.location.href=\"sign_up.html\";");
         	  out.println("</script>");
         	  
-          }else if(checkAccountExistence(typeinput, email, "") == true) {
+          }else if(checkAccountExistence(typeinput, "", email) == true) {
         	  PrintWriter out = response.getWriter();
         	  response.setContentType("text/html");
         	  out.println("<script type=\"text/javascript\">");
@@ -106,13 +106,15 @@ public class SignUp extends HttpServlet {
        String selectSql;
        
        if (accType.equals("Create Foundation Account")) {
-    	   selectSql = "SELECT * FROM foundation WHERE found_name = ? OR email = ?";
+    	   selectSql = "SELECT * FROM foundation WHERE found_name = ? OR email = ? UNION "
+    	   		+ "SELECT * FROM donors WHERE email = ?";
     	   try {
     	          DBConnection.getDBConnection(getServletContext());
     	          connection = DBConnection.connection;
     	          PreparedStatement preparedStmt = connection.prepareStatement(selectSql);
     	          preparedStmt.setString(1, v1);
     	          preparedStmt.setString(2, v2);
+    	          preparedStmt.setString(3, v2);
     	          ResultSet rsCheck = preparedStmt.executeQuery();
     	    	  
     	          
@@ -131,12 +133,14 @@ public class SignUp extends HttpServlet {
     	       }
     	   
        }else {
-    	   selectSql = "SELECT * FROM donors WHERE email = ?";
+    	   selectSql = "SELECT * FROM donors WHERE email = ? UNION "
+    	   		+ "SELECT * FROM foundation WHERE email = ?";
     	   try {
     	          DBConnection.getDBConnection(getServletContext());
     	          connection = DBConnection.connection;
     	          PreparedStatement preparedStmt = connection.prepareStatement(selectSql);
     	          preparedStmt.setString(1, v2);
+    	          preparedStmt.setString(2, v2);
     	          ResultSet rsCheck = preparedStmt.executeQuery();
     	          
     	          if (rsCheck.next() != false) {	//if account already existence
@@ -165,7 +169,8 @@ public class SignUp extends HttpServlet {
 	       
 	      String insertSql = " INSERT INTO foundation (found_name, fullname, email, address, password) values (?, ?, ?, ?, ?)";
 	      //String insertSql_donor = " INSERT INTO donor (id, Makes, Models, VIN, Year, Price, Phone, Email) values (default, ?, ?, ?, ?, ?, ?, ?)";
-
+	      
+	      
 	      try {
 	         DBConnection.getDBConnection(getServletContext());
 	         connection = DBConnection.connection;
