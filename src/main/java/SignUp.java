@@ -36,7 +36,7 @@ public class SignUp extends HttpServlet {
       if ("Create Foundation Account".equals(typeinput)) {	//*********Submit New Foundation Account********
     	  String fullname = request.getParameter("nameF");		
           String found_name = request.getParameter("found_name");
-          String emailF = request.getParameter("emailF");
+          String emailF = request.getParameter("emailF").toLowerCase();
           String addressF = request.getParameter("addressF");
           String passwordF = request.getParameter("passwordF");
           
@@ -66,7 +66,7 @@ public class SignUp extends HttpServlet {
       } else {													//*********Submit New Donor Account********
     	  String first = request.getParameter("first");		
           String last = request.getParameter("last");
-          String email = request.getParameter("email");
+          String email = request.getParameter("email").toLowerCase();
           String address = request.getParameter("address");
           String password = request.getParameter("password");
           																//if there is at least one blank text box then popup an alert window
