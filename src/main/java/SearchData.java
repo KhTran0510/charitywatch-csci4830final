@@ -73,11 +73,11 @@ public class SearchData extends HttpServlet {
          }
          
          out.println("<input type=\"submit\" value=\"Donate\" /><br/>");
-         out.println("<a href=./search_data.html>Search Data</a> <br>");
+         //out.println("<a href=./search_data.html>Search Data</a> <br>");
          out.println("</body></html>");
          
-         out.println("<a href=./sign_up.html>Sign Up</a> <br>");
-         out.println("</body></html>");
+         //out.println("<a href=./sign_up.html>Sign Up</a> <br>");
+        // out.println("</body></html>");
          rs.close();
          preparedStatement.close();
          connection.close();
