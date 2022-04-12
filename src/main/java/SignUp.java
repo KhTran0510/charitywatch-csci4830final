@@ -96,8 +96,8 @@ public class SignUp extends HttpServlet {
       
    }
    															
-   													//Foundation v1 = found_name, v2 = email
-   														//Donor v1 = "", v2 = email
+   													//Foundation: 	v1 = found_name	 v2 = email
+   													//Donor: 		v1 = ""			 v2 = email
    protected boolean checkAccountExistence(String accType, String v1, String v2) {
 	   Connection connection = null;
        //String insertSql_foundation =
@@ -179,7 +179,7 @@ public class SignUp extends HttpServlet {
 	         preparedStmt.setString(2, fullname);
 	         preparedStmt.setString(3, emailF);
 	         preparedStmt.setString(4, addressF);
-	         preparedStmt.setString(5, passwordF);
+	         //preparedStmt.setString(5, passwordF);
 	         preparedStmt.execute();
 	         connection.close();
 	         

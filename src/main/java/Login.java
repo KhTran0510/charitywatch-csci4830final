@@ -38,8 +38,6 @@ public class Login extends HttpServlet {
 		String email = request.getParameter("email").toLowerCase();
 		String password = request.getParameter("password");
 		
-		
-		
 		if (email.isBlank() || password.isBlank()) {
        	  PrintWriter out = response.getWriter();
        	  response.setContentType("text/html");
@@ -49,7 +47,10 @@ public class Login extends HttpServlet {
        	  out.println("</script>");
 		}else {
 			if(checkAccountExistence(acctype, email, password)) {
-				donor_profile(acctype, email, response);
+				if(acctype.equals("Donors"))
+					donor_profile(acctype, email, response);
+				else
+					foundation_profile(acctype, email, response);
 			}else {
 				PrintWriter out = response.getWriter();
 		       	response.setContentType("text/html");
@@ -60,8 +61,6 @@ public class Login extends HttpServlet {
 				System.out.println("Wrong Info Account");
 			}
 		}
-		
-		
 	}
 															//v1 = email; v2 = password
 	protected boolean checkAccountExistence(String accType, String v1, String v2) {
@@ -86,14 +85,9 @@ public class Login extends HttpServlet {
  	        	  return false;
  	          }
  	          
- 	          
- 	          
  	       } catch (Exception e) {
  	          e.printStackTrace();
  	       }
-	       
-	       
-	       
 	       return false;
 	       
 	}
@@ -123,6 +117,8 @@ public class Login extends HttpServlet {
 	             preparedStatement.setString(1, email);
 	             
 	         ResultSet rs = preparedStatement.executeQuery();
+	         
+	         
 	         
 	         while (rs.next()) {
 	            //int id = rs.getInt("id");
@@ -164,6 +160,77 @@ public class Login extends HttpServlet {
 	         }
 	      }
 	}
+	
+	protected void foundation_profile(String accType, String email, HttpServletResponse response) throws IOException {
+		response.setContentType("text/html");
+	      PrintWriter out = response.getWriter();
+	      String title = "Database Result";
+	      String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + //
+	            "transitional//en\">\n"; //
+	      out.println(docType + //
+	            "<html>\n" + //
+	            "<head><title>" + title + "</title></head>\n" + //
+	            "<body bgcolor=\"#f0f0f0\">\n" + //
+	            "<h1 align=\"center\">" + title + "</h1>\n");
+
+	      Connection connection = null;
+	      PreparedStatement preparedStatement = null;
+	      try {
+	         DBConnection.getDBConnection(getServletContext());
+	         connection = DBConnection.connection;
+
+	         
+	        	 String selectSQL = "SELECT * FROM finance WHERE found_email LIKE ?";
+	             preparedStatement = connection.prepareStatement(selectSQL);
+	             preparedStatement.setString(1, email);
+	             
+	         ResultSet rs = preparedStatement.executeQuery();
+	         
+	         while (rs.next()) {
+	            //int id = rs.getInt("id");
+	            //String id = rs.getString("id").trim();
+	            String amount = rs.getString("amount").trim();
+	            String spent = rs.getString("spent").trim();
+	            
+	            	out.println("Amount: " + amount + "<br>");
+	            	out.println("Spent: " + spent + "<br>");
+	               
+	         }
+	         //out.println("<form action=\"EMPTY\">");								//Revise here*****
+	         //out.println("<input type=\"submit\" value=\"Withdraw\" /></form>");
+	         out.println("<input type=\"submit\" value=\"Withdraw\" />");			
+	         
+	         //out.println("<input type=\"button\" onclick=\"location.href=\"search_data.html\";\" value=\"Search Foundation\" /><br/>");
+	        
+	         out.println("</body></html>");
+	         
+	         //out.println("<a href=./sign_up.html>Sign Up</a> <br>");
+	        // out.println("</body></html>");
+	         rs.close();
+	         preparedStatement.close();
+	         connection.close();
+	      } catch (SQLException se) {
+	         se.printStackTrace();
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      } finally {
+	         try {
+	            if (preparedStatement != null)
+	               preparedStatement.close();
+	         } catch (SQLException se2) {
+	         }
+	         try {
+	            if (connection != null)
+	               connection.close();
+	         } catch (SQLException se) {
+	            se.printStackTrace();
+	         }
+	      }
+	}
+	
+	
+	
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
