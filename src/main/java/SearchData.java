@@ -20,14 +20,24 @@ public class SearchData extends HttpServlet {
    }
 
    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	  String keywordfound_name = request.getParameter("keywordfound_name");
-      search(keywordfound_name, response);
+	  String typeStart = request.getParameter("submit");
+	  
+	  if (typeStart.equals("Start Donation")) {
+		  System.out.println("Donor is trying to make deposit");
+		  String keywordfound_name = "";
+		  html_start_search(keywordfound_name, response);
+	  }else if (typeStart.equals("Search")){
+		  String keywordfound_name = request.getParameter("keywordfound_name");
+	      html_start_search(keywordfound_name, response);
+	  }
+	   
+	   
    }//
 
-   void search(String keywordfound_name, HttpServletResponse response) throws IOException {
+   void html_start_search(String keywordfound_name, HttpServletResponse response) throws IOException {
       response.setContentType("text/html");
       PrintWriter out = response.getWriter();
-      String title = "Database Result";
+      String title = "Foundation Search";
       String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + //
             "transitional//en\">\n"; //
       out.println(docType + //
@@ -67,12 +77,14 @@ public class SearchData extends HttpServlet {
             if (keywordfound_name.isEmpty() || found_name.contains(keywordfound_name)) {
                //out.println("ID: " + id + ", ");
             	out.println("<input type=\"radio\" id=\""+found_name+"\" name=\"acctype\" value=\""+found_name+"\" checked>");
-            	out.println("Foundation: " + found_name + "<br>");
+            	out.println(found_name + "<br>");
                
             }
          }
          
-         out.println("<input type=\"submit\" value=\"Donate\" /><br/>");
+         out.println("<form action=\"Transaction\" method=\"POST\">");
+         out.println("<input type=\"submit\" name=\"submit\" value=\"Donate\" /><br/>\n");
+         out.println("</form>\n");
          //out.println("<a href=./search_data.html>Search Data</a> <br>");
          out.println("</body></html>");
          
