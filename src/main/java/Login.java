@@ -18,6 +18,46 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/Login")
 public class Login extends HttpServlet {
+	
+	protected String first;
+	protected String last;
+	protected String foundation_name;
+	
+	private String styleTableForHTML = 				//style for scrollable table
+			"<style>\n"	
+		    + "table {\n"	
+		    + "  font-family: arial, sans-serif;\n"
+		    + "  border-collapse: collapse;\n"
+		    + "  width: auto;"
+		    + "  border:1px solid black;"
+		    + "}\n"
+		    
+		    + ".tableFixHead {\n"
+		    + "	 overflow: auto;\n"
+		    + "  height: 200px;\n"		//table height
+			+ "}\n"
+		      
+			+ ".tableFixHead thead th {\n"
+		    + "  position: sticky;\n"
+		    + "  top: 0;\n"
+			+ "}\n"
+		    
+		    + "td, th {\n"
+		    + "  border: 1px solid #dddddd;\n"
+		    + "  text-align: left;\n"
+		    + "  padding: 8px;\n"
+		    + "	 font-size: 12px;\n"	
+		    + "}\n"
+		    
+		    + "th{\n"
+		   	+ "  background: #eee;\n"
+		    + "}\n"
+		    
+		    + "tr:nth-child(even) {\n"
+		    + "  background-color: #dddddd;\n"
+		    + "}\n" +
+		    "</style>" ;
+	
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -38,6 +78,7 @@ public class Login extends HttpServlet {
 		String email = request.getParameter("email").toLowerCase();
 		String password = request.getParameter("password");
 		
+		
 		if (email.isBlank() || password.isBlank()) {
        	  PrintWriter out = response.getWriter();
        	  response.setContentType("text/html");
@@ -47,10 +88,13 @@ public class Login extends HttpServlet {
        	  out.println("</script>");
 		}else {
 			if(checkAccountExistence(acctype, email, password)) {
-				if(acctype.equals("Donors"))
-					donor_profile(acctype, email, response);
-				else
-					foundation_profile(acctype, email, response);
+				if(acctype.equals("Donors")) {
+					donor_profile(acctype, email, first, last, response);
+					//System.out.println(first + " " + last);
+				} else {
+					foundation_profile(acctype, email, foundation_name, response);
+					//System.out.println(foundation_name);
+				}
 			}else {
 				PrintWriter out = response.getWriter();
 		       	response.setContentType("text/html");
@@ -76,8 +120,13 @@ public class Login extends HttpServlet {
  	          preparedStmt.setString(1, v1);
  	          preparedStmt.setString(2, v2);
  	          ResultSet rsCheck = preparedStmt.executeQuery();
- 	    	  
  	          if (rsCheck.next() != false) {	//if account already existence
+ 	        	 if(accType.equals("Donors")) {
+ 	        		first = rsCheck.getString("first").trim();
+ 	        		last = rsCheck.getString("last").trim();
+ 	        	  }else {
+ 	        		foundation_name = rsCheck.getString("found_name").trim();
+ 	        	  }
  	        	  connection.close();
  	        	  return true;				
  	          }else {
@@ -91,50 +140,87 @@ public class Login extends HttpServlet {
 	       return false;
 	       
 	}
-		
 	
-	protected void donor_profile(String accType, String email, HttpServletResponse response) throws IOException {
+	protected void donor_profile(String accType, String email, String first, String last, HttpServletResponse response) throws IOException {
 		response.setContentType("text/html");
 	      PrintWriter out = response.getWriter();
-	      String title = "Database Result";
+	      String title = "Welcome " + first + " " + last;
 	      String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + //
 	            "transitional//en\">\n"; //
 	      out.println(docType + //
 	            "<html>\n" + //
-	            "<head><title>" + title + "</title></head>\n" + //
+	            "<head><title>Welcome</title></head>\n" + //
 	            "<body bgcolor=\"#f0f0f0\">\n" + //
-	            "<h1 align=\"center\">" + title + "</h1>\n");
+	            "<h1 align=\"left\"><t>" + title + "</h1>\n");
 
 	      Connection connection = null;
 	      PreparedStatement preparedStatement = null;
 	      try {
 	         DBConnection.getDBConnection(getServletContext());
 	         connection = DBConnection.connection;
-
-	         
-	        	 String selectSQL = "SELECT * FROM finance WHERE donor_email LIKE ?";
+	         	
+	         	 
+	        	 //String selectSQL = "SELECT * FROM finance WHERE donor_email LIKE ?";
+	        	 
+	        	 String selectSQL = "SELECT found_name, amount, spent, date_time, note "
+	        	 		+ "FROM foundation, finance "
+	        	 		+ "WHERE foundation.email = finance.found_email AND finance.donor_email = ? ;";
 	             preparedStatement = connection.prepareStatement(selectSQL);
 	             preparedStatement.setString(1, email);
 	             
 	         ResultSet rs = preparedStatement.executeQuery();
 	         
+	         //out.println("<div style=\"height:100px; overflow:auto;\">\n");
+	         out.println("<div class=\"tableFixHead\">\n");
 	         
+	         out.println("<table>\n"
+	 				+ "	<tr>\n" 
+	        		+ "	<thead>"	
+	 				+ "		<th>Foundation</th>\n"
+	 				+ "		<th>Amount</th>\n"
+	 				+ "		<th>Spent</th>\n"
+	 				+ "		<th>Datetime</th>\n"
+	 				+ "		<th>Note</th>\n"
+	 				+ "	</thead>\n"
+	 				+ "	</tr>\n");
 	         
+	         String found_name;
+	         String amount;
+	 	     String spent;
+	 	     String datetime;
+	 	     String note;
+	 	     
+	 	     //select found_name, amount, spent from foundation, finance 
+	 	     //where foundation.email = "foodB@gmail.com" and foundation.email = finance.found_email;
+	 	     
 	         while (rs.next()) {
 	            //int id = rs.getInt("id");
 	            //String id = rs.getString("id").trim();
-	            String amount = rs.getString("amount").trim();
-	            String spent = rs.getString("spent").trim();
-	            
-	            	out.println("Amount: " + amount + "<br>");
-	            	out.println("Spent: " + spent + "<br>");
-	               
+	        	found_name = rs.getString("found_name").trim();
+	        	amount = rs.getString("amount").trim();
+		        spent = rs.getString("spent").trim();
+		        datetime = rs.getString("date_time").trim();
+		        note = (rs.getString("note").trim());
+		        
+		        out.println("<tr>\n");
+		        out.println("<td>" + found_name + "</td>\n");
+		        out.println("<td>" + amount + "</td>\n");
+		        out.println("<td>" + spent + "</td>\n");
+		        out.println("<td>" + datetime + "</td>\n");
+		        out.println("<td>" + note + "</td>\n");
+		        out.println("</tr>\n");   
 	         }
-	         out.println("<form action=\"search_data.html\">");
-	         out.println("<input type=\"submit\" value=\"Search Foundation\" /></form>");
+	         
+	         out.println("</table>\n");
+	         out.println("</div>\n");
+	         //out.println("<form action=\"search_data.html\">");
+	         out.println("<form action=\"SearchData\">");
+	         out.println("<br><input type=\"submit\" name=\"submit\" value=\"Start Donation\" /></form>");
 	         
 	         //out.println("<input type=\"button\" onclick=\"location.href=\"search_data.html\";\" value=\"Search Foundation\" /><br/>");
 	        
+	         out.println(styleTableForHTML);//
+	         
 	         out.println("</body></html>");
 	         
 	         //out.println("<a href=./sign_up.html>Sign Up</a> <br>");
@@ -161,47 +247,96 @@ public class Login extends HttpServlet {
 	      }
 	}
 	
-	protected void foundation_profile(String accType, String email, HttpServletResponse response) throws IOException {
+	protected void foundation_profile(String accType, String email, String foundation_name, HttpServletResponse response) throws IOException {
 		response.setContentType("text/html");
-	      PrintWriter out = response.getWriter();
-	      String title = "Database Result";
+		PrintWriter out = response.getWriter();
+	      String title = foundation_name + " foundation";
 	      String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + //
 	            "transitional//en\">\n"; //
 	      out.println(docType + //
 	            "<html>\n" + //
-	            "<head><title>" + title + "</title></head>\n" + //
+	    		  
+	            "<head><title>Welcome</title></head>\n" + //
 	            "<body bgcolor=\"#f0f0f0\">\n" + //
-	            "<h1 align=\"center\">" + title + "</h1>\n");
-
+	            //"<h1 align=\"left\">" + title + "</h1>\n");
+	      		"<h1>" + title + "</h1>\n" 
+	            
+	    		  );
+	      
+	      
 	      Connection connection = null;
 	      PreparedStatement preparedStatement = null;
 	      try {
+	    	  	String amount;
+		        String spent;
+		        String datetime;
+		        double total_amount = 0;
+		        String note;
+		        
 	         DBConnection.getDBConnection(getServletContext());
 	         connection = DBConnection.connection;
 
 	         
-	        	 String selectSQL = "SELECT * FROM finance WHERE found_email LIKE ?";
+	        	 //String selectSQL = "SELECT * FROM finance WHERE found_email LIKE ?";
+	        	 
+	        	 String selectSQL = "SELECT amount, spent, date_time, note "
+	        	 		+ "FROM finance WHERE finance.found_email = ?";
 	             preparedStatement = connection.prepareStatement(selectSQL);
 	             preparedStatement.setString(1, email);
 	             
 	         ResultSet rs = preparedStatement.executeQuery();
 	         
+	         
+	         //out.println("<div style=\"height:100px; overflow:auto;\">\n");
+	         
+	         out.println("<div class=\"tableFixHead\">\n");
+	         
+	        out.println("<table>\n"
+				+ "	<tr>\n"
+				+ "	<thead>"
+				+ "		<th>Amount</th>\n"
+				+ "		<th>Spent</th>\n"
+				+ "		<th>Datetime</th>\n"
+				+ "		<th>Note</th>\n"
+				+ "	</thead>"
+				+ "	</tr>\n");
+	         
+	        
 	         while (rs.next()) {
 	            //int id = rs.getInt("id");
 	            //String id = rs.getString("id").trim();
-	            String amount = rs.getString("amount").trim();
-	            String spent = rs.getString("spent").trim();
+	            amount = rs.getString("amount").trim();
+	            spent = rs.getString("spent").trim();
+	            datetime = rs.getString("date_time").trim();
+	            note = rs.getString("note").trim();
 	            
-	            	out.println("Amount: " + amount + "<br>");
-	            	out.println("Spent: " + spent + "<br>");
-	               
+	            if (Double.parseDouble(spent) == 0) {
+	            	total_amount += Double.parseDouble(amount);
+	            }
+	            
+	            	out.println("<tr>\n");
+	            	out.println("<td>" + amount + "</td>\n");
+	            	out.println("<td>" + spent + "</td>\n");
+	            	out.println("<td>" + datetime + "</td>\n");
+	            	out.println("<td>" + note + "</td>\n");
+	            	out.println("</tr>\n");
 	         }
+	         
+	         out.println("</table>\n");
+	         out.println("</div>\n");
+	         
+	         
+	         out.printf("\nTotal: $%.2f <br>\n", total_amount);	
 	         //out.println("<form action=\"EMPTY\">");								//Revise here*****
 	         //out.println("<input type=\"submit\" value=\"Withdraw\" /></form>");
-	         out.println("<input type=\"submit\" value=\"Withdraw\" />");			
-	         
+	         out.println("<form action=\"Transaction\" method=\"POST\">");
+	         out.println("<input type=\"submit\" name=\"submit\" value=\"Withdraw\" />");	
+	         out.println("</form>");
 	         //out.println("<input type=\"button\" onclick=\"location.href=\"search_data.html\";\" value=\"Search Foundation\" /><br/>");
 	        
+	         out.println(styleTableForHTML);//
+	         
+	         
 	         out.println("</body></html>");
 	         
 	         //out.println("<a href=./sign_up.html>Sign Up</a> <br>");
