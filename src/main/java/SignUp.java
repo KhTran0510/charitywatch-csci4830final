@@ -61,6 +61,7 @@ public class SignUp extends HttpServlet {
     	  
           }else {
         	  foundationSignup(fullname, found_name, emailF, addressF, passwordF, response);
+        	  System.out.println(fullname + " " + found_name + " " + emailF + " " + addressF+ " " + passwordF);
           }
 	      
       } else {													//*********Submit New Donor Account********
@@ -179,7 +180,7 @@ public class SignUp extends HttpServlet {
 	         preparedStmt.setString(2, fullname);
 	         preparedStmt.setString(3, emailF);
 	         preparedStmt.setString(4, addressF);
-	         //preparedStmt.setString(5, passwordF);
+	         preparedStmt.setString(5, passwordF);
 	         preparedStmt.execute();
 	         connection.close();
 	         

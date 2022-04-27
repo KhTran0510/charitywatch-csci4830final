@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,6 +25,8 @@ public class Login extends HttpServlet {
 	protected String last;
 	protected String foundation_name;
 	
+
+	
 	private String styleTableForHTML = 				//style for scrollable table
 			"<style>\n"	
 		    + "table {\n"	
@@ -36,6 +40,7 @@ public class Login extends HttpServlet {
 		    + "	 overflow: auto;\n"
 		    + "  height: 200px;\n"		//table height
 			+ "}\n"
+			
 		      
 			+ ".tableFixHead thead th {\n"
 		    + "  position: sticky;\n"
@@ -73,37 +78,58 @@ public class Login extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
-		String acctype = request.getParameter("acctype");
-		String email = request.getParameter("email").toLowerCase();
-		String password = request.getParameter("password");
-		
-		
-		if (email.isBlank() || password.isBlank()) {
-       	  PrintWriter out = response.getWriter();
-       	  response.setContentType("text/html");
-       	  out.println("<script type=\"text/javascript\">");
-       	  out.println("alert('Missing Info to Login!!\\ndsafafg');");
-       	  out.println("window.location.href=\"login.html\";");
-       	  out.println("</script>");
-		}else {
-			if(checkAccountExistence(acctype, email, password)) {
-				if(acctype.equals("Donors")) {
-					donor_profile(acctype, email, first, last, response);
-					//System.out.println(first + " " + last);
-				} else {
-					foundation_profile(acctype, email, foundation_name, response);
-					//System.out.println(foundation_name);
+		String acctype= request.getParameter("acctype");
+		String email;
+		String password;
+		try {
+			email = request.getParameter("email");
+			password = request.getParameter("password");
+			if (email.isBlank() || password.isBlank()) {
+		       	  PrintWriter out = response.getWriter();
+		       	  response.setContentType("text/html");
+		       	  out.println("<script type=\"text/javascript\">");
+		       	  out.println("alert('Missing Info to Login!!\\ndsafafg');");
+		       	  out.println("window.location.href=\"login.html\";");
+		       	  out.println("</script>");
+				}else {
+					if(checkAccountExistence(acctype, email, password)) {
+						if(acctype.equals("Donors")) {
+							donor_profile(acctype, email, password, first, last, response, request);
+							//System.out.println(first + " " + last);
+						} else {
+							foundation_profile(acctype, email, password, foundation_name, response, request);
+							//System.out.println(foundation_name);
+						}
+					}else {
+						PrintWriter out = response.getWriter();
+				       	response.setContentType("text/html");
+				       	out.println("<script type=\"text/javascript\">");
+				       	out.println("alert('Wrong Email or Password!!');");
+				       	out.println("window.location.href=\"login.html\";");
+				       	out.println("</script>");
+						System.out.println("Wrong Info Account");
+					}
 				}
-			}else {
-				PrintWriter out = response.getWriter();
-		       	response.setContentType("text/html");
-		       	out.println("<script type=\"text/javascript\">");
-		       	out.println("alert('Wrong Email or Password!!');");
-		       	out.println("window.location.href=\"login.html\";");
-		       	out.println("</script>");
-				System.out.println("Wrong Info Account");
+		}catch(Exception e) {
+		
+		
+		//if(acctype.isEmpty() && email.isEmpty() && password.isEmpty()) {
+			acctype = (String) request.getSession().getAttribute("acctype");
+			email = (String) request.getSession().getAttribute("email");
+			password = (String) request.getSession().getAttribute("password");
+			
+			/*System.out.println(acctype);
+			System.out.println(email);
+			System.out.println(password);
+			*/
+			
+			if(acctype.equals("Donors")) {
+				donor_profile(acctype, email, password, first, last, response, request);
+				//System.out.println(first + " " + last);
+			} else {
+				foundation_profile(acctype, email, password, foundation_name, response, request);
 			}
+		//}
 		}
 	}
 															//v1 = email; v2 = password
@@ -141,7 +167,12 @@ public class Login extends HttpServlet {
 	       
 	}
 	
-	protected void donor_profile(String accType, String email, String first, String last, HttpServletResponse response) throws IOException {
+	protected void donor_profile(String accType, String email, String password, String first, String last, HttpServletResponse response, HttpServletRequest request) throws IOException {
+		
+		request.getSession().setAttribute("email", email);
+		request.getSession().setAttribute("acctype", accType);
+		request.getSession().setAttribute("password", password);
+		
 		response.setContentType("text/html");
 	      PrintWriter out = response.getWriter();
 	      String title = "Welcome " + first + " " + last;
@@ -150,8 +181,17 @@ public class Login extends HttpServlet {
 	      out.println(docType + //
 	            "<html>\n" + //
 	            "<head><title>Welcome</title></head>\n" + //
-	            "<body bgcolor=\"#f0f0f0\">\n" + //
-	            "<h1 align=\"left\"><t>" + title + "</h1>\n");
+	            "<body bgcolor=\"#f0f0f0\">\n"); 
+	      
+	      out.println("<div style=\'float:right\'>");
+	      out.println("<form action=\"Logout\" method=\"POST\">");
+	      out.println("<button>Logout</button>");
+	      out.println("</form>");
+	      out.println("</div>");
+	            
+	      out.println("<h1 align=\"left\"><t>" + title + "</h1>\n");
+	      
+	      
 
 	      Connection connection = null;
 	      PreparedStatement preparedStatement = null;
@@ -164,7 +204,8 @@ public class Login extends HttpServlet {
 	        	 
 	        	 String selectSQL = "SELECT found_name, amount, spent, date_time, note "
 	        	 		+ "FROM foundation, finance "
-	        	 		+ "WHERE foundation.email = finance.found_email AND finance.donor_email = ? ;";
+	        	 		+ "WHERE foundation.email = finance.found_email AND finance.donor_email = ? "
+	        	 		+ "ORDER BY date_time DESC;";
 	             preparedStatement = connection.prepareStatement(selectSQL);
 	             preparedStatement.setString(1, email);
 	             
@@ -190,6 +231,7 @@ public class Login extends HttpServlet {
 	 	     String datetime;
 	 	     String note;
 	 	     
+	 	     
 	 	     //select found_name, amount, spent from foundation, finance 
 	 	     //where foundation.email = "foodB@gmail.com" and foundation.email = finance.found_email;
 	 	     
@@ -214,8 +256,14 @@ public class Login extends HttpServlet {
 	         out.println("</table>\n");
 	         out.println("</div>\n");
 	         //out.println("<form action=\"search_data.html\">");
-	         out.println("<form action=\"SearchData\">");
-	         out.println("<br><input type=\"submit\" name=\"submit\" value=\"Start Donation\" /></form>");
+	         out.println("<form action=\"SearchData\"><br>");
+	         
+	         out.println("<input type=\"submit\" name=\"submit\" value=\"Start Donation\" />");
+	         
+	         out.println("</form>");
+	         
+	         
+	         
 	         
 	         //out.println("<input type=\"button\" onclick=\"location.href=\"search_data.html\";\" value=\"Search Foundation\" /><br/>");
 	        
@@ -247,13 +295,29 @@ public class Login extends HttpServlet {
 	      }
 	}
 	
-	protected void foundation_profile(String accType, String email, String foundation_name, HttpServletResponse response) throws IOException {
+	
+	
+	protected void foundation_profile(String accType, String email, String password, String foundation_name, HttpServletResponse response, HttpServletRequest request) throws IOException {
+		request.getSession().setAttribute("email", email);
+		request.getSession().setAttribute("acctype", accType);
+		request.getSession().setAttribute("password", password);
+		
+		/*
+		System.out.printf("%s %s %s\n",request.getSession().getAttribute("email"),
+				request.getSession().getAttribute("acctype"),request.getSession().getAttribute("password"));
+		
+		
+		System.out.printf("%s %s %s\n",request.getSession().getAttribute("email"),
+				request.getSession().getAttribute("acctype"),request.getSession().getAttribute("password"));
+		*/
+		
+		
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 	      String title = foundation_name + " foundation";
 	      String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + //
 	            "transitional//en\">\n"; //
-	      out.println(docType + //
+	      /*out.println(docType + //
 	            "<html>\n" + //
 	    		  
 	            "<head><title>Welcome</title></head>\n" + //
@@ -261,7 +325,20 @@ public class Login extends HttpServlet {
 	            //"<h1 align=\"left\">" + title + "</h1>\n");
 	      		"<h1>" + title + "</h1>\n" 
 	            
-	    		  );
+	    		  );*/
+	      out.println(docType + //
+		            "<html>\n" + //
+		            "<head><title>Welcome</title></head>\n" + //
+		            "<body bgcolor=\"#f0f0f0\">\n"); 
+		      
+		      out.println("<div style=\'float:right\'>");
+		      out.println("<form action=\"Logout\" method=\"POST\">");
+		      out.println("<button>Logout</button>");
+		      out.println("</form>");
+		      out.println("</div>");
+		            
+		      out.println("<h1 align=\"left\"><t>" + title + "</h1>\n");
+	      
 	      
 	      
 	      Connection connection = null;
@@ -270,8 +347,10 @@ public class Login extends HttpServlet {
 	    	  	String amount;
 		        String spent;
 		        String datetime;
-		        double total_amount = 0;
+		        double total = 0;
 		        String note;
+		        
+		        
 		        
 	         DBConnection.getDBConnection(getServletContext());
 	         connection = DBConnection.connection;
@@ -280,7 +359,8 @@ public class Login extends HttpServlet {
 	        	 //String selectSQL = "SELECT * FROM finance WHERE found_email LIKE ?";
 	        	 
 	        	 String selectSQL = "SELECT amount, spent, date_time, note "
-	        	 		+ "FROM finance WHERE finance.found_email = ?";
+	        	 		+ "FROM finance WHERE finance.found_email = ? "
+	        	 		+ "ORDER BY date_time DESC;";
 	             preparedStatement = connection.prepareStatement(selectSQL);
 	             preparedStatement.setString(1, email);
 	             
@@ -310,9 +390,9 @@ public class Login extends HttpServlet {
 	            datetime = rs.getString("date_time").trim();
 	            note = rs.getString("note").trim();
 	            
-	            if (Double.parseDouble(spent) == 0) {
-	            	total_amount += Double.parseDouble(amount);
-	            }
+	            
+	            	total += (Double.parseDouble(amount)) - (Double.parseDouble(spent));
+	            
 	            
 	            	out.println("<tr>\n");
 	            	out.println("<td>" + amount + "</td>\n");
@@ -321,17 +401,23 @@ public class Login extends HttpServlet {
 	            	out.println("<td>" + note + "</td>\n");
 	            	out.println("</tr>\n");
 	         }
+	         request.getSession().setAttribute("total", total);
 	         
 	         out.println("</table>\n");
 	         out.println("</div>\n");
 	         
 	         
-	         out.printf("\nTotal: $%.2f <br>\n", total_amount);	
+	         out.printf("\n<br>Total: $%.2f <br>\n", total);	
 	         //out.println("<form action=\"EMPTY\">");								//Revise here*****
 	         //out.println("<input type=\"submit\" value=\"Withdraw\" /></form>");
 	         out.println("<form action=\"Transaction\" method=\"POST\">");
-	         out.println("<input type=\"submit\" name=\"submit\" value=\"Withdraw\" />");	
-	         out.println("</form>");
+	         
+	         out.println("<br>Amount to withdraw:  <input type=\"text\" name=\"amount\">");
+	         out.println("<br>Note:<br><textarea name=\"note\" cols=\"40\" rows=\"5\"></textarea>");
+	         out.println("<br><input type=\"submit\" name=\"submit\" value=\"Withdraw\" /><br/>\n");
+	         out.println("</form>\n");
+	         
+	         
 	         //out.println("<input type=\"button\" onclick=\"location.href=\"search_data.html\";\" value=\"Search Foundation\" /><br/>");
 	        
 	         out.println(styleTableForHTML);//
@@ -363,20 +449,23 @@ public class Login extends HttpServlet {
 	      }
 	}
 	
+	/*private void logout(HttpServletRequest request) {
+		request.getSession().removeAttribute("email");
+		request.getSession().removeAttribute("acctype");
+		request.getSession().removeAttribute("password");
+	}*/
+	
 	
 	
 	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+ 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 }
 	
-	//*************
-			//insert into finance (found_email,donor_email,amount,spent,note,date_time) values("foodB@gmail.com","user@gmail.com",50,0,"hello", sysdate());
-	//*************
 
 
