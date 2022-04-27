@@ -113,7 +113,7 @@ public class Login extends HttpServlet {
 		}catch(Exception e) {
 		
 		
-		//if(acctype.isEmpty() && email.isEmpty() && password.isEmpty()) {
+
 			acctype = (String) request.getSession().getAttribute("acctype");
 			email = (String) request.getSession().getAttribute("email");
 			password = (String) request.getSession().getAttribute("password");
@@ -125,7 +125,6 @@ public class Login extends HttpServlet {
 			
 			if(acctype.equals("Donors")) {
 				donor_profile(acctype, email, password, first, last, response, request);
-				//System.out.println(first + " " + last);
 			} else {
 				foundation_profile(acctype, email, password, foundation_name, response, request);
 			}
@@ -135,9 +134,7 @@ public class Login extends HttpServlet {
 															//v1 = email; v2 = password
 	protected boolean checkAccountExistence(String accType, String v1, String v2) {
 		   Connection connection = null;
-	       //String insertSql_foundation =
-	        
-	       //String insertSql = " INSERT INTO foundation (first, last, email, address, password) values (?, ?, ?, ?, ?)";
+
 	       String selectSql = "SELECT * FROM "+ accType.toLowerCase() +" WHERE email = ? AND password = ?";
 	       try {
  	          DBConnection.getDBConnection(getServletContext());
@@ -294,9 +291,7 @@ public class Login extends HttpServlet {
 	         }
 	      }
 	}
-	
-	
-	
+
 	protected void foundation_profile(String accType, String email, String password, String foundation_name, HttpServletResponse response, HttpServletRequest request) throws IOException {
 		request.getSession().setAttribute("email", email);
 		request.getSession().setAttribute("acctype", accType);

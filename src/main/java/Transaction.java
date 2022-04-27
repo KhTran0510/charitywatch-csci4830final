@@ -185,7 +185,7 @@ public class Transaction extends HttpServlet {
 	         preparedStatementSearch.setString(1, email);
              rs = preparedStatementSearch.executeQuery();
 	         
-             String adjustSpentSQL = "update finance set spent = ? where id = ?;";
+            /* String adjustSpentSQL = "update finance set spent = ? where id = ?;";
              
              
              int countDonor = 0;
@@ -212,6 +212,37 @@ public class Transaction extends HttpServlet {
             		 preparedStatementUpdate = connection.prepareStatement(adjustSpentSQL);
             		 preparedStatementUpdate.setDouble(1, donateAmount);
             		 preparedStatementUpdate.setInt(2, id);
+            	 }
+             }*/
+             String adjustSpentSQL = "update finance set spent = ?, note = ? where id = ?;";
+             
+             
+             int countDonor = 0;
+             double amountForReceipt = withdraw;
+             
+             while (rs.next()) {
+            	 double donateAmount = rs.getDouble("amount");
+            	 double donateSpent = rs.getDouble("spent");
+            	 int id = rs.getInt("id");
+            	 String donateNote = rs.getString("note");
+            	 
+            	 double remain_withdraw_diff = (withdraw - (donateAmount - donateSpent));
+            	 //if withdraw amount less than the remain amount => spent += withdraw amount => break loop
+            	 if(remain_withdraw_diff <= 0) {
+            		 preparedStatementUpdate = connection.prepareStatement(adjustSpentSQL);
+            		 preparedStatementUpdate.setDouble(1, withdraw + donateSpent);
+            		 preparedStatementUpdate.setString(2, donateNote + " \n(Partly used for " + note +" at " + System.currentTimeMillis() +")");
+            		 preparedStatementUpdate.setInt(3, id);
+            		 preparedStatementUpdate.execute();
+            		 countDonor++;
+            		 break;
+            	 }
+            	 //if withdraw amount greater than the remain amount => spent = donateAmount; amount -= remain => break loop
+            	 else if(remain_withdraw_diff > 0) {
+            		 preparedStatementUpdate = connection.prepareStatement(adjustSpentSQL);
+            		 preparedStatementUpdate.setDouble(1, donateAmount);
+            		 preparedStatementUpdate.setString(2, donateNote + " \n(Used for " + note +")");
+            		 preparedStatementUpdate.setInt(3, id);
             		 preparedStatementUpdate.execute();
             		 withdraw -= (donateAmount - donateSpent);
             		 countDonor++;
