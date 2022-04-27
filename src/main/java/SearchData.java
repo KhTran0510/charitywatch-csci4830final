@@ -26,6 +26,78 @@ public class SearchData extends HttpServlet {
 		    + "  height: 200px;"
 		    + "  overflow-y: auto"
 		    + "}\n"
+		    
+		    + " @charset \"ISO-8859-1\";\r\n"
+		    + "\r\n"
+		    + "header {\r\n"
+		    + "    background-color:#2b2b2b;\r\n"
+		    + "    color:white;\r\n"
+		    + "    text-align:center;\r\n"
+		    + "    padding:5px;	 \r\n"
+		    + "}\r\n"
+		    + "\r\n"
+		    + "body{\r\n"
+		    + "	background-color:#edffee;\r\n"
+		    + "}\r\n"
+		    + "nav {\r\n"
+		    + "	background-color:#3b8a3e;\r\n"
+		    + "	color:white;\r\n"
+		    + "    line-height:30px;\r\n"
+		    + "    height:1000px;\r\n"
+		    + "    width:100px;\r\n"
+		    + "    float:left;\r\n"
+		    + "    padding:10px;	      \r\n"
+		    + "}\r\n"
+		    + "\r\n"
+		    + "h1 {\r\n"
+		    + "    font-family:roboto;\r\n"
+		    + "}\r\n"
+		    + "\r\n"
+		    + "button {\r\n"
+		    + "	background-color: #4CAF50;\r\n"
+		    + "    height:70px;\r\n"
+		    + "    width:100px;\r\n"
+		    + "    border: none;\r\n"
+		    + "    color: white;\r\n"
+		    + "    text-align: center;\r\n"
+		    + "    text-decoration: none;\r\n"
+		    + "    display: inline-block;\r\n"
+		    + "    font-size: 16px;\r\n"
+		    + "    margin: 4px 2px;\r\n"
+		    + "    cursor: pointer;	      \r\n"
+		    + "}\r\n"
+		    + "\r\n"
+		    + "section {\r\n"
+		    + "	width:350px;\r\n"
+		    + "    float:left;\r\n"
+		    + "    padding:10px;	 	 \r\n"
+		    + "}\r\n"
+		    + "\r\n"
+		    + "footer {\r\n"
+		    + "    background-color:#2b2b2b;\r\n"
+		    + "    color:white;\r\n"
+		    + "    clear:both;\r\n"
+		    + "    text-align:center;\r\n"
+		    + "    padding:5px;	 	 \r\n"
+		    + "}\r\n"
+		    + "\r\n"
+		    + "input[type=submit] {\r\n"
+		    + "    background-color: #4CAF50;\r\n"
+		    + "    border: none;\r\n"
+		    + "    color: white;\r\n"
+		    + "    padding: 15px 32px;\r\n"
+		    + "    text-align: center;\r\n"
+		    + "    text-decoration: none;\r\n"
+		    + "    display: inline-block;\r\n"
+		    + "    font-size: 16px;\r\n"
+		    + "    margin: 4px 2px;\r\n"
+		    + "    cursor: pointer;\r\n"
+		    + "}\r\n"
+		    + ".split {\r\n"
+		    + "	padding: 0 18px;\r\n"
+		    + "  	display: none;\r\n"
+		    + "  	overflow: hidden;\r\n"
+		    + "}"
 		    + "</style>" ;
 
    public SearchData() {
@@ -87,6 +159,8 @@ public class SearchData extends HttpServlet {
          
          out.println("<form action=\"SearchData\" method=\"POST\">");
          out.println("Search:  <input type=\"text\" name=\"keywordfound_name\">");
+         
+         
          out.println("<input type=\"submit\" name=\"submit\" value=\"Search\">");
          
          
@@ -114,9 +188,8 @@ public class SearchData extends HttpServlet {
          //out.println("<a href=./search_data.html>Search Data</a> <br>");
          out.println(styleListForHTML);
          out.println("</body></html>");
-         
-         out.println("<a href=./login.html>Login</a> <br>");
-         out.println("<a href=./sign_up.html>Signup</a> <br>");
+         out.println("<button onclick=\"location.href='./sign_up.html'\">Sign Up</button>");
+         out.println("<button onclick=\"location.href='./login.html'\">Login</button>");
         // out.println("</body></html>");
          rs.close();
          preparedStatement.close();

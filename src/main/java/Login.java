@@ -60,7 +60,79 @@ public class Login extends HttpServlet {
 		    
 		    + "tr:nth-child(even) {\n"
 		    + "  background-color: #dddddd;\n"
-		    + "}\n" +
+		    + "}\n"
+		    
+		    + "@charset \"ISO-8859-1\";\n"
+		    + "\n"
+		    + "header {\n"
+		    + "    background-color:#183619;\n"
+		    + "    color:white;\n"
+		    + "    text-align:center;\n"
+		    + "    padding:5px;	 \n"
+		    + "}\n"
+		    + "\n"
+		    + "body{\n"
+		    + "	background-color:#edffee;\n"
+		    + "}\n"
+		    + "nav {\n"
+		    + "	background-color:#3b8a3e;\n"
+		    + "	color:white;\n"
+		    + "    line-height:30px;\n"
+		    + "    height:1000px;\n"
+		    + "    width:100px;\n"
+		    + "    float:left;\n"
+		    + "    padding:10px;	      \n"
+		    + "}\n"
+		    + "\n"
+		    + "h1 {\n"
+		    + "    font-family:roboto;\n"
+		    + "}\n"
+		    + "\n"
+		    + "button {\n"
+		    + "	background-color: #4CAF50;\n"
+		    + "    height:70px;\n"
+		    + "    width:100px;\n"
+		    + "    border: none;\n"
+		    + "    color: white;\n"
+		    + "    text-align: center;\n"
+		    + "    text-decoration: none;\n"
+		    + "    display: inline-block;\n"
+		    + "    font-size: 16px;\n"
+		    + "    margin: 4px 2px;\n"
+		    + "    cursor: pointer;	      \n"
+		    + "}\n"
+		    + "\n"
+		    + "section {\n"
+		    + "	width:350px;\n"
+		    + "    float:left;\n"
+		    + "    padding:10px;	 	 \n"
+		    + "}\n"
+		    + "\n"
+		    + "footer {\n"
+		    + "    background-color:#2b2b2b;\n"
+		    + "    color:white;\n"
+		    + "    clear:both;\n"
+		    + "    text-align:center;\n"
+		    + "    padding:5px;	 	 \n"
+		    + "}\n"
+		    + "\n"
+		    + "input[type=submit] {\n"
+		    + "    background-color: #4CAF50;\n"
+		    + "    border: none;\n"
+		    + "    color: white;\n"
+		    + "    padding: 15px 32px;\n"
+		    + "    text-align: center;\n"
+		    + "    text-decoration: none;\n"
+		    + "    display: inline-block;\n"
+		    + "    font-size: 16px;\n"
+		    + "    margin: 4px 2px;\n"
+		    + "    cursor: pointer;\n"
+		    + "}\n"
+		    + ".split {\n"
+		    + "	padding: 0 18px;\n"
+		    + "  	display: none;\n"
+		    + "  	overflow: hidden;\n"
+		    + "}" +
 		    "</style>" ;
 	
 	private static final long serialVersionUID = 1L;
@@ -296,15 +368,6 @@ public class Login extends HttpServlet {
 		request.getSession().setAttribute("email", email);
 		request.getSession().setAttribute("acctype", accType);
 		request.getSession().setAttribute("password", password);
-		
-		/*
-		System.out.printf("%s %s %s\n",request.getSession().getAttribute("email"),
-				request.getSession().getAttribute("acctype"),request.getSession().getAttribute("password"));
-		
-		
-		System.out.printf("%s %s %s\n",request.getSession().getAttribute("email"),
-				request.getSession().getAttribute("acctype"),request.getSession().getAttribute("password"));
-		*/
 		
 		
 		response.setContentType("text/html");
