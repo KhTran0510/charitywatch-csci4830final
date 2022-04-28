@@ -55,7 +55,7 @@ public class Transaction extends HttpServlet {
 		if(transactionType.equals("Donate")) {
 			
 			if (request.getParameter("amount").isBlank()) {
-				printerror("No amount for make donation", response);
+				printerror("Please enter an amount for donation!", response);
 				 
 			}else {
 				try {
@@ -63,10 +63,10 @@ public class Transaction extends HttpServlet {
 			        if (amount > 0)
 			        	donor_deposit(email, found_name, amount, note, response);
 			        else {
-			        	printerror("Invalid Amount", response);
+			        	printerror("Invalid Amount!", response);
 			        }
 			    } catch (NumberFormatException nfe) {
-			    	printerror("Invalid Amount", response);
+			    	printerror("Invalid input type!", response);
 			    }
 			}
 			
@@ -79,7 +79,7 @@ public class Transaction extends HttpServlet {
 			double total = (Double) request.getSession().getAttribute("total");
 			
 			if (request.getParameter("amount").isBlank()) {
-				printerror("No amount to make withdrawal", response);
+				printerror("Please enter an amount for withdrawal!", response);
 				 
 			}else {
 				try {
@@ -87,12 +87,12 @@ public class Transaction extends HttpServlet {
 			        if (amount < total && amount > 0)
 			        	foundation_withdraw(email, amount, total, note, response);
 			        else if (amount > total)
-			        	printerror("Insufficient amount to withdraw", response);
+			        	printerror("Insufficient amount to withdraw!", response);
 			        else if (amount < 0)
-			        	printerror("Invalid Amount", response);
+			        	printerror("Invalid Amount!", response);
 			        
 			    } catch (NumberFormatException nfe) {
-			    	printerror("Invalid Amount", response);
+			    	printerror("Invalid input type!", response);
 			    }
 			}
 				
@@ -150,6 +150,8 @@ public class Transaction extends HttpServlet {
 		
 	      } catch (SQLException se) {
 		         se.printStackTrace();
+		         printerror("No foundation selected!", response);
+		         
 		      } catch (Exception e) {
 		         e.printStackTrace();
 		      } finally {
@@ -179,7 +181,9 @@ public class Transaction extends HttpServlet {
 		
 		  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
 		  
-		
+		  if (note.isBlank()) {
+			  printerror("Missing note!", response);
+		  }
 		
 		Connection connection = null;
 		PreparedStatement preparedStatementSearch = null;
@@ -280,7 +284,7 @@ public class Transaction extends HttpServlet {
 			out = response.getWriter();
 			response.setContentType("text/html");
 		 	out.println("<script type=\"text/javascript\">");
-		 	out.println("alert('"+feedback+"!!\\n');");
+		 	out.println("alert('"+feedback+"\\n');");
 		 	out.println("window.location.href=\"Login\";");
 		 	out.println("</script>");
 		} catch (IOException e) {

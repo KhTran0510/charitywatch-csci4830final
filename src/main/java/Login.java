@@ -65,7 +65,7 @@ public class Login extends HttpServlet {
 		    + "@charset \"ISO-8859-1\";\n"
 		    + "\n"
 		    + "header {\n"
-		    + "    background-color:#183619;\n"
+		    + "    background-color:#214a22;\n"
 		    + "    color:white;\n"
 		    + "    text-align:center;\n"
 		    + "    padding:5px;	 \n"
@@ -83,14 +83,9 @@ public class Login extends HttpServlet {
 		    + "    float:left;\n"
 		    + "    padding:10px;	      \n"
 		    + "}\n"
-		    + "\n"
-		    + "h1 {\n"
-		    + "    font-family:roboto;\n"
-		    + "}\n"
-		    + "\n"
 		    + "button {\n"
 		    + "	background-color: #4CAF50;\n"
-		    + "    height:70px;\n"
+		    + "    height:50px;\n"
 		    + "    width:100px;\n"
 		    + "    border: none;\n"
 		    + "    color: white;\n"
@@ -109,7 +104,7 @@ public class Login extends HttpServlet {
 		    + "}\n"
 		    + "\n"
 		    + "footer {\n"
-		    + "    background-color:#2b2b2b;\n"
+		    + "    background-color:#214a22;\n"
 		    + "    color:white;\n"
 		    + "    clear:both;\n"
 		    + "    text-align:center;\n"
@@ -160,7 +155,7 @@ public class Login extends HttpServlet {
 		       	  PrintWriter out = response.getWriter();
 		       	  response.setContentType("text/html");
 		       	  out.println("<script type=\"text/javascript\">");
-		       	  out.println("alert('Missing Info to Login!!\\ndsafafg');");
+		       	  out.println("alert('Please fill in all fields!');");
 		       	  out.println("window.location.href=\"login.html\";");
 		       	  out.println("</script>");
 				}else {
@@ -176,7 +171,7 @@ public class Login extends HttpServlet {
 						PrintWriter out = response.getWriter();
 				       	response.setContentType("text/html");
 				       	out.println("<script type=\"text/javascript\">");
-				       	out.println("alert('Wrong Email or Password!!');");
+				       	out.println("alert('Wrong Email or Password!');");
 				       	out.println("window.location.href=\"login.html\";");
 				       	out.println("</script>");
 						System.out.println("Wrong Info Account");

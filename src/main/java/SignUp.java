@@ -45,7 +45,7 @@ public class SignUp extends HttpServlet {
         	  PrintWriter out = response.getWriter();
         	  response.setContentType("text/html");
         	  out.println("<script type=\"text/javascript\">");
-        	  out.println("alert('Missing Info to Submit!!');");
+        	  out.println("alert('Please fill in all fields!');");
         	  out.println("window.location.href=\"sign_up.html\";");
         	  out.println("</script>");
         	  															//check if account already existed or not
@@ -53,7 +53,7 @@ public class SignUp extends HttpServlet {
         	  PrintWriter out = response.getWriter();
         	  response.setContentType("text/html");
         	  out.println("<script type=\"text/javascript\">");
-        	  out.println("alert('Account is already exist!!');");
+        	  out.println("alert('Account already exists!');");
         	  out.println("window.location.href=\"sign_up.html\";");
         	  out.println("</script>");
         	 
@@ -75,7 +75,7 @@ public class SignUp extends HttpServlet {
         	  PrintWriter out = response.getWriter();
         	  response.setContentType("text/html");
         	  out.println("<script type=\"text/javascript\">");
-        	  out.println("alert('Missing Info to Submit!!');");
+        	  out.println("alert('Please fill in all fields!');");
         	  out.println("window.location.href=\"sign_up.html\";");
         	  out.println("</script>");
         	  
@@ -83,7 +83,7 @@ public class SignUp extends HttpServlet {
         	  PrintWriter out = response.getWriter();
         	  response.setContentType("text/html");
         	  out.println("<script type=\"text/javascript\">");
-        	  out.println("alert('Account is already exist!!');");
+        	  out.println("alert('Account already exists!');");
         	  out.println("window.location.href=\"sign_up.html\";");
         	  out.println("</script>");
         	 
